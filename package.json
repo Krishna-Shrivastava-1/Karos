@@ -13,8 +13,8 @@
   "keywords": ["api", "express", "error-handling", "node", "backend"],
   "author": "Krishna Shrivastava",    
   "license": "MIT",
-  "repository": "https://github.com/YOUR_GITHUB_USERNAME/karos",  // ← EDIT 2
-  "bugs": "https://github.com/YOUR_GITHUB_USERNAME/karos/issues", // ← EDIT 3
+  "repository": "https://github.com/Krishna-Shrivastava-1/Karos",  
+  "bugs": "https://github.com/Krishna-Shrivastava-1/Karos/issues", 
   "type": "commonjs",
   "devDependencies": {
     "@types/express": "^5.0.6",
