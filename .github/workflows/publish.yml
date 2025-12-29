@@ -14,7 +14,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm install
       - run: chmod +x node_modules/.bin/tsup    # <--- ADD THIS LINE
-      - run: npm run build
+      - run: npm run buildgit 
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.KAROS}}
