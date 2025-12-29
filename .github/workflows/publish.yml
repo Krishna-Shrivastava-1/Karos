@@ -12,7 +12,8 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: npm install          # ← CHANGED: npm install (not ci)
+      - run: npm install
+      - run: chmod +x node_modules/.bin/tsup    # <--- ADD THIS LINE
       - run: npm run build
       - run: npm publish --access public
         env:
