@@ -1,103 +1,167 @@
-karos
-=====
+# Karos
 
 **Opinionated, minimal API response & error standardization for Express.**
 
-Karos enforces predictable JSON response shapes and centralized error handling in Node.js APIs — without adding business logic, configuration, or framework lock-in.
+Karos enforces a single, predictable JSON response contract across your entire Node.js API — without adding business logic, configuration, or framework lock-in.
 
-The Problem
------------
+---
+
+## 🚫 The Problem
 
 In most Express backends:
+- ❌ Every route formats responses differently
+- ❌ Errors are sometimes strings, sometimes objects
+- ❌ Status codes are inconsistent
+- ❌ Frontend logic becomes fragile and conditional-heavy
+- ❌ Teams rewrite the same response boilerplate in every project
 
-*   Every route formats responses differently
-    
-*   Errors are sometimes strings, sometimes objects
-    
-*   Status codes are inconsistent
-    
-*   Frontend logic becomes fragile and full of conditionals
-    
-*   Teams re-implement the same response boilerplate in every project
-    
+**There is no enforced backend–frontend contract.**
 
-There is no shared contract between backend and frontend.
+## ✅ The Solution
 
-What Karos Enforces
--------------------
+Karos fixes exactly this problem — nothing more, nothing less. It enforces **one response contract** for your entire API.
 
-Karos enforces **one response contract** for your entire API.
+### Success Response
+```json
+{
+  "success": true,
+  "data": {
+    "id": 123,
+    "name": "Alice"
+  }
+}
+```
 
-Success
--------
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   json{    "success": true,    "data": {}  }   `
-
-Error
------
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   json{    "success": false,    "error": {      "code": "NOT_FOUND",      "message": "User not found"    }  }   `
+### Error Response
+```json
+{
+  "success": false,
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "User not found"
+  }
+}
+```
 
 No exceptions. No special cases.
 
-Install + Usage (60 seconds)
-----------------------------
+---
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   bashnpm install karos   `
+## 📦 Installation
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   const express = require('express');  const { ok, notFoundError, errorHandler } = require('karos');  const app = express();  app.use(express.json());  // Your routes here...  app.get('/users/:id', async (req, res) => {    const user = await db.findUser(req.params.id);    if (!user) {      notFoundError('User not found');  // Throws → middleware catches    }    ok(res, user);  });  // ONE middleware catches everything  app.use(errorHandler);  app.listen(3000);   `
+```bash
+npm install karos
+```
 
-No try/catch. No per-route error formatting. One consistent API surface.
+---
 
-Core API
---------
+## 🚀 Quick Start (60 seconds)
 
-**ok(res, data, message?, meta?)**Formats a successful response.
+Karos replaces manual `try/catch` blocks and inconsistent response formatting.
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   ok(res, user);  ok(res, user, 'User fetched');   `
+### 1. Basic Setup
 
-**notFoundError(message?)**Prebuilt helpers (autocomplete-safe).
+```js
+const express = require('express');
+const { ok, notFoundError, errorHandler } = require('karos');
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   notFoundError();                           // 404 "Not found"  validationError('Invalid email');          // 400  unauthorizedError();                       // 401   `
+const app = express();
+app.use(express.json());
 
-**errorHandler**Express middleware that:
+// --- Your Routes ---
 
-*   Catches all thrown Karos errors
-    
-*   Formats unknown errors as INTERNAL\_ERROR
-    
-*   Preserves correct HTTP status codes
-    
+app.get('/users/:id', async (req, res) => {
+  const user = await db.findUser(req.params.id);
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   app.use(errorHandler);  // Last, after all routes   `
+  if (!user) {
+    // Throws automatically -> Middleware catches it
+    notFoundError('User not found');
+  }
 
-Error Codes (Autocomplete)
---------------------------
+  // Returns standardized 200 OK
+  ok(res, user);
+});
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   ErrorCode.NOT_FOUND          // 404  ErrorCode.VALIDATION_FAILED  // 400    ErrorCode.UNAUTHORIZED       // 401  ErrorCode.FORBIDDEN          // 403  ErrorCode.CONFLICT           // 409  ErrorCode.INTERNAL_ERROR     // 500   `
+// --- ONE middleware catches everything ---
+// Must be placed after all routes
+app.use(errorHandler);
 
-You control: message, status, structured details.Karos only enforces the response shape.
+app.listen(3000, () => console.log('Server running on port 3000'));
+```
 
-Database Errors (Auto-handled)
-------------------------------
+**Zero try/catch needed.** If your DB crashes, Karos catches it and returns a clean 500 `INTERNAL_ERROR`.
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   app.get('/orders', async (req, res) => {    const orders = await prisma.order.findMany();  // Crashes? → 500    ok(res, orders);  });   `
+---
 
-**Zero try/catch needed.** Middleware formats everything.
+## 📚 Core API
 
-What Karos Does NOT Do (By Design)
-----------------------------------
+### `ok(res, data, message?, meta?)`
 
-❌ No request validation❌ No authentication helpers❌ No logging❌ No database handling❌ No config files❌ No framework adapters (Fastify, Hono, etc.)
+Formats a successful response.
 
-**Pure formatting layer only.** Your business logic stays yours.
+| Param | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `res` | `Response` | **Yes** | Express Response object |
+| `data` | `any` | **Yes** | The payload (object, array, string) |
+| `message` | `string` | No | Optional success message |
+| `meta` | `object` | No | Optional metadata (e.g., pagination info) |
 
-TypeScript ✅
-------------
+**Example:**
+```js
+ok(res, user);
+ok(res, user, 'User fetched successfully');
+```
 
-Full types + autocomplete for ErrorCode.NOT\_FOUND, response shapes.
+---
 
-License
--------
+### Error Helpers
+
+Prebuilt helpers that throw standardized errors. These stop execution immediately, so you don't need `return`.
+
+| Helper Function | HTTP Status | Error Code |
+| :--- | :--- | :--- |
+| `notFoundError(msg)` | **404** | `NOT_FOUND` |
+| `validationError(msg)` | **400** | `VALIDATION_FAILED` |
+| `unauthorizedError(msg)` | **401** | `UNAUTHORIZED` |
+| `forbiddenError(msg)` | **403** | `FORBIDDEN` |
+| `conflictError(msg)` | **409** | `CONFLICT` |
+| `internalError(msg)` | **500** | `INTERNAL_ERROR` |
+
+**Example:**
+```js
+if (emailInvalid) validationError('Invalid email format');
+if (!isAdmin) forbiddenError('Admin access required');
+```
+
+---
+
+### `errorHandler`
+
+Express middleware that:
+1. Catches all thrown Karos errors.
+2. Catches unexpected crashes (DB down, undefined variables).
+3. Formats unknown errors as `INTERNAL_ERROR` (500).
+
+```js
+// Add this as the very last middleware in your app
+app.use(errorHandler);
+```
+
+---
+
+## TypeScript Support
+
+Karos is written in TypeScript and includes full type definitions out of the box.
+
+- ✅ Full type safety
+- ✅ Autocomplete-safe error codes
+
+```ts
+import { ok, ErrorCode } from 'karos';
+```
+
+---
+
+## License
 
 MIT
