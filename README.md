@@ -6,7 +6,7 @@ Karos enforces a single, predictable JSON response contract across your entire N
 ---
 
 ### 📖 Learn More
-For a deep dive into the methods, functions, and the philosophy behind this library, check out the [Karos Implementation Guide]([https://your-blog-link-here.com](https://kodesword.vercel.app/blog/i-published-my-first-npm-package-karos)).
+For a deep dive into the methods, functions, and the philosophy behind this library, check out the [Karos Implementation Guide](https://kodesword.vercel.app/blog/i-published-my-first-npm-package-karos).
 
 ---
 
